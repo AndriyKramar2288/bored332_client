@@ -1,0 +1,9 @@
+{
+  "header": {
+    "title": "Welcome to my site",
+    "login": "Log in"
+  },
+  "main": {
+    "hello": "Hello, {{name}}!"
+  }
+}

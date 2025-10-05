@@ -1,1 +1,31 @@
 @import "tailwindcss";
+
+.bg-main {
+  background-color: #62626284;
+}
+
+.bg_searcher {
+  background-color: #29292984;
+}
+
+.bg-header {
+  background-color: #3d3d3d84;
+}
+
+.bg-red {
+  background-color: #671818a2;
+}
+
+.border-red {
+  border-color: #671818a2;
+}
+
+.button-bg {
+  transition-duration: 200ms;
+  background-color: #671818a2;
+}
+
+.button-bg:hover {
+  transition-duration: 200ms;
+  background-color: #4b1010a2;
+}
