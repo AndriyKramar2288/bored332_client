@@ -1,15 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Bitcount+Grid+Double:wght@100..900&family=Bungee+Tint&family=Libertinus+Sans:ital,wght@0,400;0,700;1,400&family=Oswald:wght@200..700&family=PT+Mono&family=Roboto+Slab:wght@100..900&family=Smooch+Sans:wght@100..900&family=Sofia+Sans+Semi+Condensed:ital,wght@0,1..1000;1,1..1000&display=swap');
 @import "tailwindcss";
+
+* {
+  font-family: "Sofia Sans Semi Condensed", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.libertinus-sans {
+  font-family: "Libertinus Sans", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.roboto-slab {
+  font-family: "Roboto Slab", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
 
 .bg-main {
   background-color: #62626284;
 }
 
-.bg_searcher {
-  background-color: #29292984;
+.bg-searcher {
+  background-color: #8b3131;
 }
 
 .bg-header {
   background-color: #3d3d3d84;
+}
+
+.header-link:hover {
+  color: #531212;
+}
+
+.header-element {
+  background-color: #4b4b4b84;
 }
 
 .bg-red {
@@ -20,12 +49,6 @@
   border-color: #671818a2;
 }
 
-.button-bg {
-  transition-duration: 200ms;
-  background-color: #671818a2;
-}
-
 .button-bg:hover {
-  transition-duration: 200ms;
   background-color: #4b1010a2;
 }

@@ -5,20 +5,15 @@ import type { MainAPI } from "./MainAPI"
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, updateProfile, type User } from "firebase/auth";
 
 export class FirebaseAPI implements MainAPI {
-    private currentUser: User | null = null;
-    private currentProfile: UserProfile | null = null;
-
-    constructor() {
-        onAuthStateChanged(auth, async (user) => {
-            this.currentUser = user;
-            if (user) {
-                this.currentProfile = await this.getUserProfile(user.uid);
-            } else {
-                this.currentProfile = null;
-            }
-        });
-    }
     
+    async getCurrentUser(): Promise<UserProfile> {
+        if (auth.currentUser) {
+            return this.getUserProfile(auth.currentUser.uid);
+        } else {
+            throw new Error("User profile not found! (there is no current user)");
+        }
+    }
+
     private async getUserProfile(uid: string) : Promise<UserProfile> {
         const docRef = doc(db, "users", uid);
         const docSnap = await getDoc(docRef);
@@ -28,10 +23,6 @@ export class FirebaseAPI implements MainAPI {
         } else {
             throw new Error("User profile not found!");
         }
-    }
-
-    getCurrentUser(): UserProfile | null {
-        return this.currentProfile;
     }
 
     async signin(registerForm : RegisterForm): Promise<void> {
@@ -62,12 +53,8 @@ export class FirebaseAPI implements MainAPI {
         throw new Error("Method not implemented.");
     }
 
-    async login(email: string, password: string): Promise<void> {
-        try {
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            console.log("User logged in:", userCredential.user);
-        } catch (error) {
-            console.error(error);
-        }
+    async login(email: string, password: string): Promise<UserProfile> {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        return this.getUserProfile(userCredential.user.uid);
     }
 }

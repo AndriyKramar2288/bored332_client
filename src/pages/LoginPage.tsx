@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { currentAPI } from "../services/MainAPI";
 import type { RegisterForm } from "../services/dto";
+import { useAuth } from "../context/authContext";
 
 export default function LoginPage() {
   const [mode, setMode] = useState<"login" | "register">("login");
@@ -9,6 +10,8 @@ export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const { setUserProfile } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,7 +25,9 @@ export default function LoginPage() {
     setLoading(true);
     try {
       if (mode === "login") {
-        await currentAPI.login(email, password);
+        const userProfileGetted = await currentAPI.login(email, password);
+        setUserProfile(userProfileGetted)
+
       } else {
         const form: RegisterForm = { email, password, username };
         await currentAPI.signin(form);
@@ -36,8 +41,8 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-slate-100 dark:bg-slate-900 p-4">
-      <div className="w-full max-w-md bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6">
+    <main className="flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-white dark:bg-slate-800 shadow-lg p-6">
         <div className="flex justify-center mb-6 gap-4">
           <button
             className={`px-4 py-2 rounded-lg font-medium ${
