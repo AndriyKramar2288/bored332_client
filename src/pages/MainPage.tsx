@@ -1,8 +1,8 @@
 import CountryList from "../components/mainPage/CountryList";
-import { motion } from "framer-motion";
 import type { BasicCountry } from "../services/dto";
 import type { ReactNode } from "react";
-import bgImage from '../assets/g116.svg';
+import { Link } from "react-router-dom";
+import MainPageHeader from "../components/mainPage/MainPageHeader";
 
 const mockCountries: BasicCountry[] = [
   {
@@ -12,10 +12,14 @@ const mockCountries: BasicCountry[] = [
       "https://upload.wikimedia.org/wikipedia/commons/4/49/Flag_of_Ukraine.svg",
     location: {
         coordinates: "1488x1488",
-        desc: "Десь далеко",
         id: "testzz",
         regions: ["вульгардія", "пісюновщина"],
-        universe: "юаполіт"
+        universe: {
+          id: "aa",
+          name: "юаполіт",
+          desc: "qwewqeqwewqeweqwewqqweq",
+          photos: []
+        }
     },
     description:
       "Україна активно впроваджує сучасні цифрові реформи у сфері державного управління та права.",
@@ -29,10 +33,14 @@ const mockCountries: BasicCountry[] = [
       "https://upload.wikimedia.org/wikipedia/en/b/ba/Flag_of_Germany.svg",
     location: {
         coordinates: "1488x1488",
-        desc: "Десь далеко",
         id: "testzz",
         regions: ["вульгардія", "пісюновщина"],
-        universe: "юаполіт"
+        universe: {
+          id: "aa",
+          name: "юаполіт",
+          desc: "qwewqeqwewqeweqwewqqweq",
+          photos: []
+        }
     },
     description:
       "Одна з провідних держав Європи з розвиненою системою права та інновацій у публічному секторі.",
@@ -46,10 +54,14 @@ const mockCountries: BasicCountry[] = [
       "https://upload.wikimedia.org/wikipedia/en/9/9e/Flag_of_Japan.svg",
     location: {
         coordinates: "1488x1488",
-        desc: "Десь далеко",
         id: "testzz",
         regions: ["вульгардія", "пісюновщина"],
-        universe: "юаполіт"
+        universe: {
+          id: "aa",
+          name: "юаполіт",
+          desc: "qwewqeqwewqeweqwewqqweq",
+          photos: []
+        }
     },
     description:
       "Японія поєднує традиційне законодавство з передовими технологічними рішеннями.",
@@ -58,28 +70,26 @@ const mockCountries: BasicCountry[] = [
   },
 ];
 
-function MainPageHeader({ children, time } : { children? : ReactNode, time? : number }) {
+function MainPageCreateButton({ children, link, img } : { children? : ReactNode, link : string, img? : string }) {
   return (
-    <>
-    <div className="flex justify-center">
-      <h1 className="font-bold text-2xl roboto-slab px-8 pt-3 text-amber-950 bg-red text-center">
-          {children}
-      </h1>
-    </div>
-    <motion.hr initial={{ width: 0 }} animate={{ width: "auto" }} transition={{ duration: time || 0.1 }} className="border-1 border-red" />
-    </>
+    <Link to={link} className="bg-gray-300 hover:bg-gray-400 duration-300 rounded-sm p-4 flex flex-col items-center">
+      <img className="h-16" src={img || "https://yt3.googleusercontent.com/g3LI0vVGpjXj0C77yJ1-dTeja7Bk0Gj3iAvPgi9AhYKk572e1Wgb5hViRMxI37fk-wkn-yGEq5g=s900-c-k-c0x00ffffff-no-rj"} />
+      <p className="text-xl text-center libertinus-sans text-[#222222]">
+        {children}
+      </p>
+    </Link>
   )
 }
 
 export default function MainPage () {
     return (
-        <main className="bg-cover bg-center" style={{ backgroundImage: `url(${bgImage})` }}>
+        <main>
             <div className="flex flex-col px-24">
-                <section className="flex my-6 flex-col">
+                <section className="flex my-12 flex-col">
                   <MainPageHeader time={0.2}>
                     Про нас
                   </MainPageHeader>
-                  <div className="p-4 pb-10 bg-[#8f8f8fb0]">
+                  <div className="p-4 pb-10 bg-[#7575754c]">
                     <p className="text-xl text-center libertinus-sans text-[#222222]">
                       Дана платформа дозволить усім охочим забезпечити фундамент лору свого державного утворення.
                     </p>
@@ -91,10 +101,25 @@ export default function MainPage () {
                     </MainPageHeader>
                     <CountryList countries={mockCountries} />
                 </section>
-                <section className="flex mt-6 flex-col" style={{ marginBottom: "300px" }}>
+                <section className="flex my-12 flex-col">
                   <MainPageHeader time={0.6}>
                     Створити власну державу
                   </MainPageHeader>
+                  <div className="p-4 px-15 pb-10 bg-[#7575754c] flex justify-center">
+                    <div className="grid grid-cols-[3fr_0.2fr_3fr_0.2fr_3fr] items-center">
+                        <MainPageCreateButton link="/location" img="https://www.svgrepo.com/show/505170/foreign-law-firm.svg">
+                        Локація
+                      </MainPageCreateButton>
+                      <div className="bg-gray-500 rounded-xs h-16 w-1 mx-5" />
+                      <MainPageCreateButton link="/model/create" img="https://www.svgrepo.com/show/505174/community-corrections-bureau.svg">
+                        Модель управління
+                      </MainPageCreateButton>
+                      <div className="bg-gray-500 rounded-xs h-16 w-1 mx-5" />
+                      <MainPageCreateButton link="/state/create" img="https://www.svgrepo.com/show/505172/community-service-station.svg">
+                        Державне утворення
+                      </MainPageCreateButton>
+                    </div>
+                  </div>
                 </section>
             </div>
         </main>

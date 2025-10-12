@@ -13,15 +13,20 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(() => {
+    const saved = localStorage.getItem("userProfile");
+    return saved ? JSON.parse(saved) : null;
+  });
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         const profile = await currentAPI.getCurrentUser();
         setUserProfile(profile);
+        localStorage.setItem("userProfile", JSON.stringify(profile));
       } else {
         setUserProfile(null);
+        localStorage.removeItem("userProfile");
       }
     });
 

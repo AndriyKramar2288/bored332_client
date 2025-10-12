@@ -7,11 +7,11 @@ interface CountryListProps {
 
 const CountryList: React.FC<CountryListProps> = ({ countries }) => {
   return (
-    <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
+    <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 bg-[#7575754c] pb-5">
       {countries.map((country) => (
         <div
           key={country.id}
-          className="bg-[#57575762] flex justify-center mt-5"
+          className="flex justify-center mt-5"
         >
             <div className="flex shadow-gray-700 shadow-md">
               <div className="flex items-center bg-searcher p-4">
@@ -50,8 +50,7 @@ const CountryList: React.FC<CountryListProps> = ({ countries }) => {
                 iconSrc="https://www.svgrepo.com/show/505193/prison.svg"
                 >
                     <div className="p-3 flex flex-col gap-1 bg-gray-200 rounded-sm shadow-sm shadow-black m-1.5">
-                        <h4 className="font-semibold text-lg">Регіон: {country.location.universe}</h4>
-                        <p className="text-sm">{country.location.desc}</p>
+                        <h4 className="font-semibold text-lg">Регіон: {country.location.universe.name}</h4>
                         <p className="text-xs text-gray-600">Підвладні регіони: {country.location.regions.join(", ")}</p>
                         <p className="text-xs text-gray-600">Координати столиці: {country.location.coordinates}</p>
                     </div>

@@ -1,10 +1,39 @@
-import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, serverTimestamp, setDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
-import type { BasicCountry, RegisterForm, UserProfile } from "./dto";
+import type { BasicCountry, BasicUniverse, CreateUniverseForm, RegisterForm, UserProfile } from "./dto";
 import type { MainAPI } from "./MainAPI"
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, updateProfile, type User } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, signOut } from "firebase/auth";
 
 export class FirebaseAPI implements MainAPI {
+
+    async getAllUniverses(): Promise<BasicUniverse[]> {
+        const querySnapshot = await getDocs(collection(db, "universes"));
+
+        // перетворюємо документи Firestore у типізований масив BasicUniverse
+        const universes: BasicUniverse[] = querySnapshot.docs.map((doc) => {
+            const data = doc.data();
+
+            return {
+                id: doc.id, // автоматично згенерований Firestore ID
+                name: data.name || "Без назви",
+                desc: data.desc || "",
+                photos: Array.isArray(data.photos) ? data.photos : [],
+            };
+        });
+
+        return universes;
+    }
+
+    async createUniverse(form: CreateUniverseForm): Promise<void> {
+        await addDoc(collection(db, "universes"), {
+            ...form,
+            createdAt: serverTimestamp(),
+        });
+    }
+
+    async logout(): Promise<void> {
+        await signOut(auth);
+    }
     
     async getCurrentUser(): Promise<UserProfile> {
         if (auth.currentUser) {
