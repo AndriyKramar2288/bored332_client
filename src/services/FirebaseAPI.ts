@@ -1,12 +1,65 @@
 import { addDoc, collection, doc, getDoc, getDocs, serverTimestamp, setDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
-import type { BasicCountry, BasicUniverse, CreateUniverseForm, RegisterForm, UserProfile } from "./dto";
-import type { MainAPI } from "./MainAPI"
+import type { MainAPI, UserProfile } from "./MainAPI"
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, signOut } from "firebase/auth";
+import type { Country_MainPage, CreateUniverseForm, RegisterForm, Universe_LocationsPage } from "./dto";
+
+interface BasicCountry {
+    id: string;
+    name: string;
+    flagSrc: string;
+    description: string;
+    lawCount: number;
+    location_id: string;
+}
+
+interface BasicUniverse {
+    id: string;
+    desc: string;
+    name: string;
+    photos: string[]    
+}
+
+interface BasicLocation {
+    id: string;
+    universe_id: String;
+    coordinates: string;
+    regions: string[];
+}
+
+interface BasicInstitute {
+    id: string;
+    name: string;
+    description: string;
+    implementedCountiesCount: number;
+}
+
+interface BasicInstituteImplementation {
+    id: string;
+    institute_id: string;
+    country_id: string;
+    law_id: string;
+    currentRate: number;
+}
+
+interface BasicLaw {
+    id: string;
+    date: Date;
+    name: string;
+    text: string;
+}
+
+interface UserPosition {
+    country: BasicCountry;
+    role: string;
+}
 
 export class FirebaseAPI implements MainAPI {
+    getAllCountries(): Promise<Country_MainPage[]> {
+        throw new Error("Method not implemented.");
+    }
 
-    async getAllUniverses(): Promise<BasicUniverse[]> {
+    async getAllUniverses(): Promise<Universe_LocationsPage[]> {
         const querySnapshot = await getDocs(collection(db, "universes"));
 
         // перетворюємо документи Firestore у типізований масив BasicUniverse
@@ -76,10 +129,6 @@ export class FirebaseAPI implements MainAPI {
             console.error("❌ Signup error:", error);
             throw error;
         }
-    }
-
-    getAllCountries(): Promise<BasicCountry[]> {
-        throw new Error("Method not implemented.");
     }
 
     async login(email: string, password: string): Promise<UserProfile> {

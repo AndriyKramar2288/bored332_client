@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import type { UserProfile } from "../services/dto";
-import { currentAPI } from "../services/MainAPI";
+import { currentAPI, type UserProfile } from "../services/MainAPI";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
 

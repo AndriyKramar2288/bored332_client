@@ -1,21 +1,18 @@
 import CountryList from "../components/mainPage/CountryList";
-import type { BasicCountry } from "../services/dto";
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import MainPageHeader from "../components/mainPage/MainPageHeader";
+import type { Country_MainPage } from "../services/dto";
 
-const mockCountries: BasicCountry[] = [
+const mockCountries: Country_MainPage[] = [
   {
-    id: "ua",
     name: "Україна",
     flagSrc:
       "https://upload.wikimedia.org/wikipedia/commons/4/49/Flag_of_Ukraine.svg",
     location: {
         coordinates: "1488x1488",
-        id: "testzz",
         regions: ["вульгардія", "пісюновщина"],
         universe: {
-          id: "aa",
           name: "юаполіт",
           desc: "qwewqeqwewqeweqwewqqweq",
           photos: []
@@ -27,16 +24,13 @@ const mockCountries: BasicCountry[] = [
     implementations: [],
   },
   {
-    id: "de",
     name: "Німеччина",
     flagSrc:
       "https://upload.wikimedia.org/wikipedia/en/b/ba/Flag_of_Germany.svg",
     location: {
         coordinates: "1488x1488",
-        id: "testzz",
         regions: ["вульгардія", "пісюновщина"],
         universe: {
-          id: "aa",
           name: "юаполіт",
           desc: "qwewqeqwewqeweqwewqqweq",
           photos: []
@@ -48,16 +42,13 @@ const mockCountries: BasicCountry[] = [
     implementations: [],
   },
   {
-    id: "jp",
     name: "Японія",
     flagSrc:
       "https://upload.wikimedia.org/wikipedia/en/9/9e/Flag_of_Japan.svg",
     location: {
         coordinates: "1488x1488",
-        id: "testzz",
         regions: ["вульгардія", "пісюновщина"],
         universe: {
-          id: "aa",
           name: "юаполіт",
           desc: "qwewqeqwewqeweqwewqqweq",
           photos: []

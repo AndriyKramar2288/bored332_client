@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import type { BasicUniverse } from "../services/dto";
 import MainPageHeader from "../components/mainPage/MainPageHeader";
 import { Link } from "react-router-dom";
 import { currentAPI } from "../services/MainAPI";
+import type { Universe_LocationsPage } from "../services/dto";
 
 export default function LocationsPage() {
 
-  const [ locations, setLocations ] = useState<BasicUniverse[]>([])
+  const [ locations, setLocations ] = useState<Universe_LocationsPage[]>([])
   const [ loading, setLoading ] = useState(true)
 
   useEffect(() => {
@@ -35,7 +35,7 @@ export default function LocationsPage() {
                 <div className="h-48 bg-gray-400/10" />
                 </>
             ) : locations.map((universe, key) => (
-              <UniverseCard key={universe.id} index={key} universe={universe} />
+              <UniverseCard key={key} index={key} universe={universe} />
             ))}
           </div>
           )}
@@ -59,7 +59,7 @@ export default function LocationsPage() {
 }
 
 // Компонент картки всесвіту
-function UniverseCard({ universe, index }: { universe: BasicUniverse, index: number }) {
+function UniverseCard({ universe, index }: { universe: Universe_LocationsPage, index: number }) {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 
   // циклічна зміна фото кожні 3 секунди

@@ -35,7 +35,7 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* Позиції користувача */}
+            {/* Позиції користувача
             <div>
               <h3 className="text-lg font-semibold mb-3">Позиції у країнах</h3>
               {userProfile.positions.length === 0 ? (
@@ -90,7 +90,7 @@ export default function ProfilePage() {
               ) : (
                 <p className="text-gray-500">Немає реалізацій</p>
               )}
-            </div>
+            </div> */}
           </div>
         </section>
       </div>

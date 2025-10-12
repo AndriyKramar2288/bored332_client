@@ -1,16 +1,16 @@
-import type { BasicCountry } from "../../services/dto";
+import type { Country_MainPage } from "../../services/dto";
 import { ExpandingButton } from "./ExpandingButton";
 
 interface CountryListProps {
-  countries: BasicCountry[];
+  countries: Country_MainPage[];
 }
 
 const CountryList: React.FC<CountryListProps> = ({ countries }) => {
   return (
     <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 bg-[#7575754c] pb-5">
-      {countries.map((country) => (
+      {countries.map((country, index) => (
         <div
-          key={country.id}
+          key={index}
           className="flex justify-center mt-5"
         >
             <div className="flex shadow-gray-700 shadow-md">
@@ -36,8 +36,8 @@ const CountryList: React.FC<CountryListProps> = ({ countries }) => {
                     <div className="p-3 flex flex-col gap-2 bg-gray-200 rounded-sm shadow-sm shadow-black m-1.5">
                         <h4 className="font-semibold text-lg">Закони ({country.lawCount})</h4>
                         <ul className="list-disc list-inside text-sm max-h-40 overflow-auto">
-                        {country.implementations.map((impl) => (
-                            <li key={impl.id}>{impl.law.text.slice(0, 50)}...</li>
+                        {country.implementations.map((impl, inx) => (
+                            <li key={inx}>{impl.law.name}</li>
                         ))}
                         </ul>
                     </div>
@@ -64,8 +64,8 @@ const CountryList: React.FC<CountryListProps> = ({ countries }) => {
                     <div className="p-3 flex flex-col gap-2 bg-gray-200 rounded-sm shadow-sm shadow-black m-1.5">
                         <h4 className="font-semibold text-lg">Реалізовані інститути</h4>
                         <ul className="list-disc list-inside text-sm max-h-40 overflow-auto">
-                        {country.implementations.map((impl) => (
-                            <li key={impl.id}>
+                        {country.implementations.map((impl, ind) => (
+                            <li key={ind}>
                             {impl.institute.name} ({impl.currentRate}%)
                             </li>
                         ))}
