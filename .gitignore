@@ -24,5 +24,4 @@ dist-ssr
 *.sw?
 
 # Custom
-firebase.ts
 .env
