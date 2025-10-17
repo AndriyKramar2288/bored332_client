@@ -1,4 +1,3 @@
-import './App.css'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import MainPage from './pages/MainPage'
 import Header from './components/Header'
@@ -11,6 +10,8 @@ import bgImage from './assets/g116.svg';
 import LocationsPage from './pages/LocationsPage'
 import CreateLocationPage from './pages/CreateLocationPage'
 import ModelsPage from './pages/ModelsPage'
+import CreateCountryPage from './pages/CreateCountryPage'
+import CreateModelPage from './pages/CreateModelPage'
 
 function App() {
   return (
@@ -27,6 +28,8 @@ function App() {
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/location" element={<LocationsPage />} />
                 <Route path="/location/create" element={<CreateLocationPage />} />
+                <Route path="/country/create" element={<CreateCountryPage />} />
+                <Route path="/model/create" element={<CreateModelPage />} />
                 <Route path="/model" element={<ModelsPage />} />
               </Routes>
             </div>

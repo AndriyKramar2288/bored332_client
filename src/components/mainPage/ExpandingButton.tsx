@@ -1,16 +1,17 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface ExpandingButtonProps {
     children? : ReactNode;
-    iconSrc : string;
+    iconSrc? : string;
+    text?: string;
     className? : string;
     style? : "default" | "green" | "red" | "location" | "laws" | "institutes";
     displayNumber?: number;
     offed?: boolean;
 }
 
-export function ExpandingButton ({ children, iconSrc, className, displayNumber, offed, style } : ExpandingButtonProps) {
+export function ExpandingButton ({ children, iconSrc, text, className, displayNumber, offed, style } : ExpandingButtonProps) {
   const [expanded, setExpanded] = useState(false);
 
   const colorVariants = {
@@ -24,6 +25,28 @@ export function ExpandingButton ({ children, iconSrc, className, displayNumber, 
 
   const colors = colorVariants[style || "default"];
   
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [offsetRight, setOffsetRight] = useState(0);
+  const [offsetBottom, setOffsetBottom] = useState(0);
+
+  useLayoutEffect(() => {
+    if (contentRef.current && expanded) {
+      const rect = contentRef.current.getBoundingClientRect();
+
+      const overflow = rect.right - window.innerWidth;
+      setOffsetRight(overflow > 0 ? rect.width + 6 : 0);
+
+      const overflowBottom = rect.bottom - window.innerHeight;
+      setOffsetBottom(overflowBottom > 0 ? overflowBottom + 6 : 0);
+    }
+    
+    if (!expanded) {
+      setOffsetRight(0)
+      setOffsetBottom(0)
+    }
+
+  }, [expanded]);
+
   return (
     <motion.div
         layout
@@ -31,16 +54,22 @@ export function ExpandingButton ({ children, iconSrc, className, displayNumber, 
         className={`${className} ${expanded ? colors.expanded : colors.base} rounded-md p-4`}
         onMouseEnter={() => !offed && setExpanded(true)}
         onMouseLeave={() => !offed && setExpanded(false)}
+        // onClick={() => setExpanded(true)}
       >
         <AnimatePresence>
           {expanded ? (
             <motion.div
               key="content"
+              ref={contentRef}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.1, ease: "easeOut" }}
-              className="overflow-hidden absolute ml-7 z-10"
+              className="absolute ml-7 z-30"
+              style={{
+                translateX: `${offsetRight ? -offsetRight : 0}px`,
+                translateY: `${offsetBottom ? -offsetBottom : 0}px`
+              }}
             >
               {children}
             </motion.div>
@@ -48,8 +77,9 @@ export function ExpandingButton ({ children, iconSrc, className, displayNumber, 
             <></>
           )}
         </AnimatePresence>
-        <div className="w-5 h-5">
-            <img src={iconSrc} />
+        <div className={`${!text && "max-w-5 max-h-5"}`}>
+            {iconSrc && <img src={iconSrc} />}
+            {text && <span className="text-white">{text}</span>}
             <span className="relative right-3 bottom-2 text-xs text-black font-semibold">{displayNumber}</span>
         </div>
       </motion.div>

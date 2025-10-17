@@ -9,29 +9,35 @@ interface BasicCountry {
     name: string;
     flagSrc: string;
     description: string;
-    lawCount: number;
-    location_id: string;
+    location: {
+        id: string;
+        universe_id: String;
+        coordinates: string;
+        regions: string[];
+    }
+}
+
+interface BasicModel {
+    id: string;
+    name: string;
+    iconSrc: string;
+    desciption: string;
 }
 
 interface BasicUniverse {
     id: string;
     desc: string;
     name: string;
-    photos: string[]    
-}
-
-interface BasicLocation {
-    id: string;
-    universe_id: String;
-    coordinates: string;
-    regions: string[];
+    photos: string[];
+    author_id: string; 
 }
 
 interface BasicInstitute {
     id: string;
     name: string;
     description: string;
-    implementedCountiesCount: number;
+    type: "IN_COUNTRY" | "IN_MODEL";
+    keeper_id: string;
 }
 
 interface BasicInstituteImplementation {
@@ -47,6 +53,8 @@ interface BasicLaw {
     date: Date;
     name: string;
     text: string;
+    type: "IN_COUNTRY" | "IN_MODEL";
+    keeper_id: string;
 }
 
 interface UserPosition {
@@ -67,6 +75,7 @@ export class FirebaseAPI implements MainAPI {
             const data = doc.data();
 
             return {
+                author_id: data.author_id,
                 id: doc.id, // автоматично згенерований Firestore ID
                 name: data.name || "Без назви",
                 desc: data.desc || "",

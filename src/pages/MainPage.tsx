@@ -106,7 +106,7 @@ export default function MainPage () {
                         Модель управління
                       </MainPageCreateButton>
                       <div className="bg-gray-500 rounded-xs h-16 w-1 mx-5" />
-                      <MainPageCreateButton link="/state/create" img="https://www.svgrepo.com/show/505172/community-service-station.svg">
+                      <MainPageCreateButton link="/country/create" img="https://www.svgrepo.com/show/505172/community-service-station.svg">
                         Державне утворення
                       </MainPageCreateButton>
                     </div>
