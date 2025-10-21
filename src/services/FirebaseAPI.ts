@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, FieldValue, getDoc, getDocs, serverTimestamp, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, FieldValue, getDoc, getDocs, serverTimestamp, setDoc, Timestamp } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import type { MainAPI, UserProfile } from "./MainAPI"
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, signOut } from "firebase/auth";
@@ -22,6 +22,7 @@ interface BasicModel {
     name: string;
     iconSrc: string;
     description: string;
+    createdAt: FieldValue;
 }
 
 interface BasicUniverse {
@@ -43,7 +44,7 @@ interface BasicInstitute {
     }[];
     type: "IN_COUNTRY" | "IN_MODEL";
     keeper_id: string;
-    date: FieldValue;
+    createdAt: FieldValue;
 }
 
 interface BasicInstituteImplementation {
@@ -56,7 +57,7 @@ interface BasicInstituteImplementation {
 
 interface BasicLaw {
     id?: string;
-    date: FieldValue;
+    createdAt: FieldValue;
     name: string;
     text: string;
     description: string;
@@ -77,8 +78,13 @@ export class FirebaseAPI implements MainAPI {
         const models: Model_ModelsPage[] = await Promise.all(querySnapshot.docs.map(async (doc) => {
             const data = doc.data() as BasicModel;
 
-            const laws = (await getDocs(collection(db, "laws"))).docs.map(law => law.data() as BasicLaw);
-            const institutes = (await getDocs(collection(db, "institutes"))).docs.map(institute => institute.data() as BasicInstitute);
+            const laws = (await getDocs(collection(db, "laws"))).docs
+            .map(law => law.data() as BasicLaw)
+            .filter(law => law.keeper_id == doc.id);
+            
+            const institutes = (await getDocs(collection(db, "institutes"))).docs
+            .map(institute => institute.data() as BasicInstitute)
+            .filter(institute => institute.keeper_id == doc.id);
 
             return {
                 name: data.name,
@@ -100,10 +106,14 @@ export class FirebaseAPI implements MainAPI {
     }
 
     async createModel(form: CreateModelForm): Promise<void> {
-        const result = await addDoc(collection(db, "models"), {
-            ...form as BasicModel,
+        const model : BasicModel = {
+            name: form.name,
+            description: form.description,
+            iconSrc: form.iconSrc,
             createdAt: serverTimestamp(),
-        });
+        };
+
+        const result = await addDoc(collection(db, "models"), model);
 
         await Promise.all([
             ...form.laws.map(law =>
@@ -111,7 +121,7 @@ export class FirebaseAPI implements MainAPI {
                 ...law,
                 type: "IN_MODEL",
                 keeper_id: result.id,
-                date: serverTimestamp(),
+                createdAt: serverTimestamp(),
             } as BasicLaw)
             ),
             ...form.institutes.map(institute =>
@@ -119,7 +129,7 @@ export class FirebaseAPI implements MainAPI {
                 ...institute,
                 type: "IN_MODEL",
                 keeper_id: result.id,
-                date: serverTimestamp(),
+                createdAt: serverTimestamp(),
             } as BasicInstitute)
             ),
         ])
@@ -149,10 +159,17 @@ export class FirebaseAPI implements MainAPI {
     }
 
     async createUniverse(form: CreateUniverseForm): Promise<void> {
-        await addDoc(collection(db, "universes"), {
-            ...form,
+        const currentUserId = (await this.getCurrentUser()).uid
+
+        const result = await addDoc(collection(db, "universes"), {
+            name: form.name,
+            desc: form.desc,
+            photos: form.photos,
             createdAt: serverTimestamp(),
-        });
+            author_id: currentUserId
+        } as BasicUniverse);
+
+        setDoc(doc(db, "users", currentUserId), { lastUniverseCreatedAt: result.id }, { merge: true })
     }
 
     async logout(): Promise<void> {

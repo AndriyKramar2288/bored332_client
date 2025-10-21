@@ -5,6 +5,7 @@ import { useAuth } from "../context/authContext";
 import type { CreateUniverseForm } from "../services/dto";
 import { currentAPI, photoPlaceholderSrc } from "../services/MainAPI";
 import MainPageHeader from "../components/mainPage/MainPageHeader";
+import { INPUT_STYLES } from "../components/InputBox";
 
 export default function CreateLocationPage() {
   const navigate = useNavigate();
@@ -75,7 +76,7 @@ export default function CreateLocationPage() {
                 <label className="block text-lg text-gray-800 font-semibold mb-1">Назва</label>
                 <input
                     type="text"
-                    className="w-full rounded-md px-3 py-2 bg-white/80 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500 duration-200"
+                    className={INPUT_STYLES}
                     value={form.name}
                     onChange={(e) => handleChange("name", e.target.value)}
                     placeholder="Введіть назву всесвіту..."
@@ -86,7 +87,7 @@ export default function CreateLocationPage() {
                 <div>
                 <label className="block text-lg text-gray-800 font-semibold my-1">Опис</label>
                 <textarea
-                    className="w-full rounded-md px-3 py-2 bg-white/80 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500 duration-200 resize-none"
+                    className={INPUT_STYLES}
                     value={form.desc}
                     onChange={(e) => handleChange("desc", e.target.value)}
                     placeholder="Опишіть ваш всесвіт..."
@@ -113,7 +114,7 @@ export default function CreateLocationPage() {
                     />
                     <input
                       type="text"
-                      className="flex-1 px-3 py-2 rounded-md bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                      className={INPUT_STYLES}
                       value={photo}
                       onChange={(e) => handlePhotoChange(index, e.target.value)}
                       placeholder="URL фото..."
@@ -132,7 +133,7 @@ export default function CreateLocationPage() {
                 <button
                   type="button"
                   onClick={addPhotoField}
-                  className="px-4 py-2 bg-amber-500 text-white rounded-md hover:bg-amber-600 transition"
+                  className="px-4 py-2 bg-[#5823235c] text-white rounded-sm hover:bg-[#58232374] transition"
                 >
                   ➕ Додати фото
                 </button>

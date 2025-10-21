@@ -21,7 +21,7 @@ export const photoPlaceholderSrc = "https://www.transitionshealthcarellc.com/wp-
 export const currentAPI : MainAPI = new FirebaseAPI()
 
 export interface UserProfile {
-    id: string;
+    uid: string;
     email: string;
     password: string;
     username: string;
