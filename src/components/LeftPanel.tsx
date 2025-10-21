@@ -15,8 +15,8 @@ export default function LeftPanel() {
     const { userProfile } = useAuth()
 
     return (
-        <nav className='flex-1 ml-5 mt-10'>
-            <ul className='flex flex-col shadow-[5px_5px_15px_rgba(100,0,0,0.50)]'>
+        <nav className='flex-1 mt-10 fixed'>
+            <ul className='flex flex-col shadow-[5px_5px_10px_rgba(100,0,0,0.30)]'>
                 <LeftPanelLink to="/">
                     Головна
                 </LeftPanelLink>

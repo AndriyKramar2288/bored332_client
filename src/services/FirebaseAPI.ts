@@ -1,11 +1,11 @@
-import { addDoc, collection, doc, getDoc, getDocs, serverTimestamp, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, FieldValue, getDoc, getDocs, serverTimestamp, setDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import type { MainAPI, UserProfile } from "./MainAPI"
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, signOut } from "firebase/auth";
-import type { Country_MainPage, CreateUniverseForm, RegisterForm, Universe_LocationsPage } from "./dto";
+import type { Country_MainPage, CreateModelForm, CreateUniverseForm, Model_ModelsPage, RegisterForm, Universe_LocationsPage } from "./dto";
 
 interface BasicCountry {
-    id: string;
+    id?: string;
     name: string;
     flagSrc: string;
     description: string;
@@ -18,14 +18,14 @@ interface BasicCountry {
 }
 
 interface BasicModel {
-    id: string;
+    id?: string;
     name: string;
     iconSrc: string;
-    desciption: string;
+    description: string;
 }
 
 interface BasicUniverse {
-    id: string;
+    id?: string;
     desc: string;
     name: string;
     photos: string[];
@@ -33,11 +33,17 @@ interface BasicUniverse {
 }
 
 interface BasicInstitute {
-    id: string;
+    id?: string;
     name: string;
     description: string;
+    requirements: {
+        id?: string;
+        text: string;
+        format: string;
+    }[];
     type: "IN_COUNTRY" | "IN_MODEL";
     keeper_id: string;
+    date: FieldValue;
 }
 
 interface BasicInstituteImplementation {
@@ -49,10 +55,11 @@ interface BasicInstituteImplementation {
 }
 
 interface BasicLaw {
-    id: string;
-    date: Date;
+    id?: string;
+    date: FieldValue;
     name: string;
     text: string;
+    description: string;
     type: "IN_COUNTRY" | "IN_MODEL";
     keeper_id: string;
 }
@@ -63,6 +70,61 @@ interface UserPosition {
 }
 
 export class FirebaseAPI implements MainAPI {
+    async getAllModels(): Promise<Model_ModelsPage[]> {
+        const querySnapshot = await getDocs(collection(db, "models"));
+
+        // перетворюємо документи Firestore у типізований масив BasicUniverse
+        const models: Model_ModelsPage[] = await Promise.all(querySnapshot.docs.map(async (doc) => {
+            const data = doc.data() as BasicModel;
+
+            const laws = (await getDocs(collection(db, "laws"))).docs.map(law => law.data() as BasicLaw);
+            const institutes = (await getDocs(collection(db, "institutes"))).docs.map(institute => institute.data() as BasicInstitute);
+
+            return {
+                name: data.name,
+                description: data.description,
+                iconSrc: data.iconSrc,
+                law: laws.map(law => ({
+                    name: law.name,
+                    description: law.description
+                })),
+                institute: institutes.map(institute => ({
+                    name: institute.name,
+                    description: institute.description,
+                    requirements: institute.requirements
+                }))
+            } as Model_ModelsPage;
+        }));
+
+        return models;
+    }
+
+    async createModel(form: CreateModelForm): Promise<void> {
+        const result = await addDoc(collection(db, "models"), {
+            ...form as BasicModel,
+            createdAt: serverTimestamp(),
+        });
+
+        await Promise.all([
+            ...form.laws.map(law =>
+            addDoc(collection(db, "laws"), {
+                ...law,
+                type: "IN_MODEL",
+                keeper_id: result.id,
+                date: serverTimestamp(),
+            } as BasicLaw)
+            ),
+            ...form.institutes.map(institute =>
+            addDoc(collection(db, "institutes"), {
+                ...institute,
+                type: "IN_MODEL",
+                keeper_id: result.id,
+                date: serverTimestamp(),
+            } as BasicInstitute)
+            ),
+        ])
+    }
+
     getAllCountries(): Promise<Country_MainPage[]> {
         throw new Error("Method not implemented.");
     }

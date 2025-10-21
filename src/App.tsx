@@ -21,7 +21,7 @@ function App() {
           <Header />
           <div className='flex flex-1 bg-[#00000010]'>
             <LeftPanel />
-            <div className="flex-7">
+            <div className="flex-7 pl-36">
               <Routes> 
                 <Route path="/" element={<MainPage />} />
                 <Route path="/login" element={<LoginPage />} />

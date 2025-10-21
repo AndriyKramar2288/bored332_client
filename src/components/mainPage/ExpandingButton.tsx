@@ -1,12 +1,14 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, m } from "framer-motion";
+
+export type ExpandingButtonStyle = "default" | "green" | "red" | "location" | "laws" | "institutes" | "tip";
 
 interface ExpandingButtonProps {
     children? : ReactNode;
     iconSrc? : string;
     text?: string;
     className? : string;
-    style? : "default" | "green" | "red" | "location" | "laws" | "institutes";
+    style? : ExpandingButtonStyle;
     displayNumber?: number;
     offed?: boolean;
 }
@@ -20,7 +22,8 @@ export function ExpandingButton ({ children, iconSrc, text, className, displayNu
     red: { base: "bg-red-300", expanded: "bg-red-400" },
     location: { base: "bg-amber-600", expanded: "bg-amber-700" },
     laws: { base: "bg-amber-400", expanded: "bg-amber-500" },
-    institutes: { base: "bg-amber-700", expanded: "bg-amber-800" }
+    institutes: { base: "bg-amber-700", expanded: "bg-amber-800" },
+    tip: { base: "bg-[#80050077]", expanded: "bg-[#800500AA]" }
   };
 
   const colors = colorVariants[style || "default"];
@@ -51,7 +54,7 @@ export function ExpandingButton ({ children, iconSrc, text, className, displayNu
     <motion.div
         layout
         transition={{ layout: { duration: 0.4, type: "spring" } }}
-        className={`${className} ${expanded ? colors.expanded : colors.base} rounded-md p-4`}
+        className={`${className} ${expanded ? colors.expanded : colors.base} duration-100 rounded-md p-4`}
         onMouseEnter={() => !offed && setExpanded(true)}
         onMouseLeave={() => !offed && setExpanded(false)}
         // onClick={() => setExpanded(true)}

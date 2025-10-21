@@ -73,6 +73,7 @@ export interface CreateModelInstitute {
   name: string;
   description: string;
   requirements: {
+    id?: string;
     text: string;
     format: string;
   }[];

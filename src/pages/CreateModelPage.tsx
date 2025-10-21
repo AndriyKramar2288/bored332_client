@@ -7,6 +7,8 @@ import MainPageHeader from "../components/mainPage/MainPageHeader";
 import InputBox, { INPUT_STYLES } from "../components/InputBox";
 import Tip from "../components/Tip";
 import LawCreator from "../components/LawCreator";
+import InstituteCreator from "../components/InstituteCreator";
+import { currentAPI } from "../services/MainAPI";
 
 export default function CreateModelPage() {
   const navigate = useNavigate();
@@ -32,15 +34,16 @@ export default function CreateModelPage() {
         !form.name.trim() || 
         !form.description.trim() || 
         !form.iconSrc.trim() || 
-        form.laws.some(law => !law.text || !law.name)
+        form.laws.some(law => !law.text.trim() || !law.name.trim()) ||
+        form.institutes.some(institute => !institute.name.trim() || !institute.description.trim())
     ) return alert("Заповни всі поля!");
     setLoading(true);
     try {
-      //await currentAPI.createUniverse(form);
+      await currentAPI.createModel(form)
       navigate("/location"); // після успіху — на сторінку локацій
     } catch (err) {
       console.error(err);
-      alert("Помилка при створенні всесвіту.");
+      alert("Помилка при створенні моделі управління.");
     } finally {
       setLoading(false);
     }
@@ -105,18 +108,6 @@ export default function CreateModelPage() {
 
               <InputBox label="закони та інститути...">
                 <div className="grid grid-cols-[1fr_2fr_auto] my-2 gap-2 items-center">
-                    <label className="block text-lg text-gray-50/30 font-semibold py-1 rounded-xs whitespace-nowrap">- закони</label>
-                    <div className="flex items-center justify-end gap-2">
-                        <p className="text-gray-50">кількість законів: {form.laws.length}</p>
-                        <button 
-                            type="button" 
-                            onClick={(e) => form.laws.length < 25 && 
-                                    setForm(prev => ({...prev, laws: [...prev.laws, {description: "", name: "", text: ""}] }))} 
-                            className="flex justify-center bg-[#6b6b6b6c] hover:bg-[#5454546c] shadow-[#6b6b6b6c] duration-200 cursor-pointer p-2 rounded-xs shadow">
-                            <img className="max-w-6" src="https://www.svgrepo.com/show/312862/plus.svg" />
-                        </button>
-                    </div>
-                    <Tip>Тут слід ввести приблизні координати столиці (або іншого 'керівного' місця) вашої держави.</Tip>
 
                     <label className="block text-lg text-gray-50/30 font-semibold py-1 rounded-xs whitespace-nowrap">- інститути</label>
                     <div className="flex items-center justify-end gap-2">
@@ -129,7 +120,29 @@ export default function CreateModelPage() {
                             <img className="max-w-6" src="https://www.svgrepo.com/show/312862/plus.svg" />
                         </button>
                     </div>
-                    <Tip>Тут слід вказати перелік регіонів, що орієнтовно входять в межі вашої держави (в контексті конкретного всесвіту)</Tip>
+                    <Tip style="default">
+                      Ключові елементи будь-якої моделі управління. Містять перелік вимог, які
+                      закон або група законів має реалізувати. Вдала та підтверджена реалізація
+                      інститутів формує загальний вигляд держави: форма правління, державні
+                      практики, переваги й недоліки на фоні інших країн тощо.
+                    </Tip>
+
+                    <label className="block text-lg text-gray-50/30 font-semibold py-1 rounded-xs whitespace-nowrap">- закони</label>
+                    <div className="flex items-center justify-end gap-2">
+                        <p className="text-gray-50">кількість законів: {form.laws.length}</p>
+                        <button 
+                            type="button" 
+                            onClick={(e) => form.laws.length < 25 && 
+                                    setForm(prev => ({...prev, laws: [...prev.laws, {description: "", name: "", text: ""}] }))} 
+                            className="flex justify-center bg-[#6b6b6b6c] hover:bg-[#5454546c] shadow-[#6b6b6b6c] duration-200 cursor-pointer p-2 rounded-xs shadow">
+                            <img className="max-w-6" src="https://www.svgrepo.com/show/312862/plus.svg" />
+                        </button>
+                    </div>
+                    <Tip style="default">
+                      Закони в моделі управління - річ необов'язкова, пригодиться вам це хіба тоді,
+                      коли для якогось з інститутів можлива миттєва, стандартна реалізація.
+                    </Tip>
+
                   </div>
               </InputBox>
             </div>
@@ -156,6 +169,12 @@ export default function CreateModelPage() {
                   index={index} 
                   setLaw={(law) => setForm(prev => ({...prev, laws: prev.laws.map((l, i) => i === index ? law : l)}))}
                   onDelete={() => setForm(prev => ({ ...prev, laws: prev.laws.filter((law, i) => i !== index) }))} />
+            ))}
+            {form.institutes.map((_, index) => (
+                <InstituteCreator 
+                  index={index} 
+                  setInstitute={(inst) => setForm(prev => ({...prev, institutes: prev.institutes.map((l, i) => i === index ? inst : l)}))}
+                  onDelete={() => setForm(prev => ({ ...prev, institutes: prev.institutes.filter((law, i) => i !== index) }))} />
             ))}
           </div>
         </section>

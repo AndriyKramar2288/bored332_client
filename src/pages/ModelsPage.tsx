@@ -57,11 +57,14 @@ const mockList : Model_ModelsPage[] = [
 
 export default function ModelsPage() {
 
-  const [ models, setModels ] = useState<Model_ModelsPage[]>(mockList)
-  const [ loading, setLoading ] = useState(false)
+  const [ models, setModels ] = useState<Model_ModelsPage[]>([])
+  const [ loading, setLoading ] = useState(true)
 
   useEffect(() => {
-    //currentAPI.getAllUniverses().then((result) => setLocations(result)).finally(() => setLoading(false))
+    currentAPI.getAllModels().then((result) => {
+      setModels(result)
+      console.log(result)
+    }).finally(() => setLoading(false))
   }, [])
   
   return (
@@ -83,7 +86,7 @@ export default function ModelsPage() {
 
           {!loading && models.length === 0 ? (
             <h1>
-                Схоже локацій ще нема . . .
+                Схоже моделей управління ще нема . . .
             </h1>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 p-4 pb-10 gap-5 bg-[#7575754c]">
@@ -167,7 +170,7 @@ export function ModelCard({ model, index }: { model: Model_ModelsPage, index: nu
                     </div>
                 </SigmaButton>
             )}
-            {model.law.length && (
+            {model.law.length > 0 && (
                 <SigmaButton photo="https://www.svgrepo.com/show/505179/online-notarization.svg">
                     <strong className="text-xs text-gray-900/70">Закони</strong>
                     <div className="flex gap-3 flex-col">
